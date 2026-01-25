@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { loadScenes } from './storage';
+import { loadScenes, type Scene } from './storage';
 
 export default function Home() {
-  const scenes = loadScenes();
+  const [scenes, setScenes] = useState<Scene[]>([]);
+
+  useEffect(() => {
+    setScenes(loadScenes());
+  }, []);
 
   return (
     <div>
@@ -14,7 +18,7 @@ export default function Home() {
       )}
 
       <ul>
-        {scenes.map(scene => (
+        {scenes.map((scene) => (
           <li key={scene.id}>
             <Link to={`/scene/${scene.id}`}>
               {scene.title || 'Untitled Scene'}

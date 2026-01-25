@@ -1,37 +1,45 @@
-import type { Scene } from './types';
+export type Scene = {
+  id: string;
+  title: string;
+  description?: string;
+  createdAt: number;
+};
 
-const KEY = 'vbt_mvp_scenes_v1';
+const STORAGE_KEY = 'visual_based_therapy_scenes';
 
+/**
+ * Загрузить все сцены
+ */
 export function loadScenes(): Scene[] {
   try {
-    const raw = localStorage.getItem(KEY);
+    const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
-    const parsed = JSON.parse(raw) as Scene[];
-    return Array.isArray(parsed) ? parsed : [];
-  } catch {
+    return JSON.parse(raw) as Scene[];
+  } catch (e) {
+    console.error('Failed to load scenes', e);
     return [];
   }
 }
 
+/**
+ * Сохранить все сцены
+ */
 export function saveScenes(scenes: Scene[]) {
-  localStorage.setItem(KEY, JSON.stringify(scenes));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(scenes));
 }
 
-export function upsertScene(scene: Scene) {
+/**
+ * Добавить новую сцену
+ */
+export function addScene(scene: Scene) {
   const scenes = loadScenes();
-  const idx = scenes.findIndex(s => s.id === scene.id);
-  const next = idx >= 0 ? scenes.map(s => (s.id === scene.id ? scene : s)) : [scene, ...scenes];
-  saveScenes(next);
-  return next;
+  scenes.push(scene);
+  saveScenes(scenes);
 }
 
-export function deleteScene(id: string) {
-  const scenes = loadScenes();
-  const next = scenes.filter(s => s.id !== id);
-  saveScenes(next);
-  return next;
-}
-
-export function getScene(id: string) {
-  return loadScenes().find(s => s.id === id);
+/**
+ * Получить сцену по id
+ */
+export function getSceneById(id: string): Scene | undefined {
+  return loadScenes().find(scene => scene.id === id);
 }

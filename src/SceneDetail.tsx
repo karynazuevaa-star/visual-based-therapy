@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import type { Scene } from '../types';
-import { getScene, upsertScene } from '../storage';
+import { getScene, upsertScene } from './storage';
 import { speak, stopSpeaking } from '../speech';
 
 const placeholderAvatar =

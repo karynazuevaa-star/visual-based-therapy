@@ -1,15 +1,12 @@
 export type Scene = {
   id: string;
-  title: string;
-  description?: string;
-  createdAt: number;
+  title?: string;
+  createdAt?: number;
+  data?: unknown;
 };
 
-const STORAGE_KEY = 'visual_based_therapy_scenes';
+const STORAGE_KEY = 'vbt_scenes';
 
-/**
- * Загрузить все сцены
- */
 export function loadScenes(): Scene[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -21,25 +18,10 @@ export function loadScenes(): Scene[] {
   }
 }
 
-/**
- * Сохранить все сцены
- */
 export function saveScenes(scenes: Scene[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(scenes));
-}
-
-/**
- * Добавить новую сцену
- */
-export function addScene(scene: Scene) {
-  const scenes = loadScenes();
-  scenes.push(scene);
-  saveScenes(scenes);
-}
-
-/**
- * Получить сцену по id
- */
-export function getSceneById(id: string): Scene | undefined {
-  return loadScenes().find(scene => scene.id === id);
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(scenes));
+  } catch (e) {
+    console.error('Failed to save scenes', e);
+  }
 }

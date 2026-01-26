@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import type { Emotion, Scene, VoiceStyle } from '../types';
 import { upsertScene } from './storage';
-import { speak, stopSpeaking } from '../speech';
+import { speak, stopSpeaking } from './speech';
 
 const EMOTIONS: Emotion[] = ['Neutral', 'Calm', 'Supportive', 'Angry', 'Critical', 'Anxious'];
 const VOICES: VoiceStyle[] = ['Default', 'Warm', 'Firm', 'Soft', 'Harsh'];

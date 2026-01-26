@@ -67,3 +67,6 @@ export function deleteScene(id: string) {
   const scenes = loadScenes().filter((s) => s.id !== id);
   saveScenes(scenes);
 }
+export function getScene(id: string) {
+  return loadScenes().find((s) => s.id === id);
+}

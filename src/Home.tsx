@@ -1,31 +1,64 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { loadScenes, type Scene } from './storage';
+import React from 'react';
+import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
 
-export default function Home() {
-  const [scenes, setScenes] = useState<Scene[]>([]);
+import Home from './Home';
+import CreateScene from './CreateScene';
+import Library from './Library';
+import SceneDetail from './SceneDetail';
 
-  useEffect(() => {
-    setScenes(loadScenes());
-  }, []);
+function Topbar() {
+  const location = useLocation();
+
+  const isActive = (path: string) =>
+    location.pathname === path ||
+    location.pathname.startsWith(path + '/');
 
   return (
-    <div>
-      <h2>My Scenes</h2>
+    <div className="topbar">
+      <div className="brand">
+        <h1>Visual Based Therapy (MVP)</h1>
+        <span>
+          Professional visualization tool for therapists — demo build
+        </span>
+      </div>
 
-      {scenes.length === 0 && (
-        <p>No scenes yet. Create your first one.</p>
-      )}
+      <div className="nav">
+        <NavLink
+          to="/"
+          className={() => 'pill' + (isActive('/') ? ' active' : '')}
+        >
+          Home
+        </NavLink>
 
-      <ul>
-        {scenes.map((scene) => (
-          <li key={scene.id}>
-            <Link to={`/scene/${scene.id}`}>
-              {scene.title || 'Untitled Scene'}
-            </Link>
-          </li>
-        ))}
-      </ul>
+        <NavLink
+          to="/create"
+          className={() => 'pill' + (isActive('/create') ? ' active' : '')}
+        >
+          Create Scene
+        </NavLink>
+
+        <NavLink
+          to="/library"
+          className={() => 'pill' + (isActive('/library') ? ' active' : '')}
+        >
+          My Library
+        </NavLink>
+      </div>
+    </div>
+  );
+}
+
+export default function App() {
+  return (
+    <div className="container">
+      <Topbar />
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/create" element={<CreateScene />} />
+        <Route path="/library" element={<Library />} />
+        <Route path="/scene/:id" element={<SceneDetail />} />
+      </Routes>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+// src/storage.ts
+
 export type Scene = {
   id: string;
   title?: string;
@@ -13,6 +15,7 @@ export type Scene = {
 
 const STORAGE_KEY = 'vbt_scenes_v1';
 
+/* ===== загрузка всех сцен ===== */
 export function loadScenes(): Scene[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -24,29 +27,14 @@ export function loadScenes(): Scene[] {
     console.error('Failed to load scenes', e);
     return [];
   }
-  /* ===== алиас (на будущее, чтобы не падала сборка) ===== */
-export const getSceneById = getScene;
-
-/* ===== сохранить / обновить сцену ===== */
-export function upsertScene(scene: Scene) {
-  const scenes = loadScenes();
-  const idx = scenes.findIndex((s) => s.id === scene.id);
-
-  if (idx >= 0) {
-    scenes[idx] = scene;
-  } else {
-    scenes.push(scene);
-  }
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(scenes));
-}
 }
 
+/* ===== внутренняя функция сохранения ===== */
 function saveScenes(scenes: Scene[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(scenes));
 }
 
-/** добавить новую сцену или обновить существующую */
+/* ===== добавить новую сцену или обновить существующую ===== */
 export function upsertScene(scene: Scene): Scene {
   const now = Date.now();
   const scenes = loadScenes();
@@ -75,14 +63,15 @@ export function upsertScene(scene: Scene): Scene {
   return created;
 }
 
+/* ===== получить сцену по id (оба варианта имени) ===== */
 export function getSceneById(id: string): Scene | undefined {
   return loadScenes().find((s) => s.id === id);
 }
 
+export const getScene = getSceneById; // алиас на случай если где-то импортируется getScene
+
+/* ===== удалить сцену ===== */
 export function deleteScene(id: string) {
   const scenes = loadScenes().filter((s) => s.id !== id);
   saveScenes(scenes);
-}
-export function getScene(id: string) {
-  return loadScenes().find((s) => s.id === id);
 }

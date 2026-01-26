@@ -24,6 +24,22 @@ export function loadScenes(): Scene[] {
     console.error('Failed to load scenes', e);
     return [];
   }
+  /* ===== алиас (на будущее, чтобы не падала сборка) ===== */
+export const getSceneById = getScene;
+
+/* ===== сохранить / обновить сцену ===== */
+export function upsertScene(scene: Scene) {
+  const scenes = loadScenes();
+  const idx = scenes.findIndex((s) => s.id === scene.id);
+
+  if (idx >= 0) {
+    scenes[idx] = scene;
+  } else {
+    scenes.push(scene);
+  }
+
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(scenes));
+}
 }
 
 function saveScenes(scenes: Scene[]) {

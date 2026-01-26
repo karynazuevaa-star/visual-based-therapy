@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Scene } from '../types';
-import { deleteScene, loadScenes } from '../storage';
+import { deleteScene, loadScenes } from './storage';
 
 export default function Library() {
   const [scenes, setScenes] = useState<Scene[]>([]);

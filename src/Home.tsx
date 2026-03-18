@@ -1,64 +1,31 @@
 import React from 'react';
-import { NavLink, Route, Routes, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
-import Home from './Home';
-import CreateScene from './CreateScene';
-import Library from './Library';
-import SceneDetail from './SceneDetail';
-
-function Topbar() {
-  const location = useLocation();
-
-  const isActive = (path: string) =>
-    location.pathname === path ||
-    location.pathname.startsWith(path + '/');
-
+export default function Home() {
   return (
-    <div className="topbar">
-      <div className="brand">
-        <h1>Visual Based Therapy (MVP)</h1>
-        <span>
-          Professional visualization tool for therapists — demo build
-        </span>
-      </div>
+    <div className="card">
+      <h2>Purpose</h2>
+      <p className="muted">
+        A professional prototype for therapists and institutes to visualize therapeutic roles
+        such as the inner critic or wise adult.
+      </p>
 
-      <div className="nav">
-        <NavLink
-          to="/"
-          className={() => 'pill' + (isActive('/') ? ' active' : '')}
-        >
-          Home
-        </NavLink>
+      <ul>
+        <li>Avatar or role note</li>
+        <li>Scripted line</li>
+        <li>Emotion and intensity</li>
+        <li>Voice preview</li>
+        <li>Reflection and debrief notes</li>
+      </ul>
 
-        <NavLink
-          to="/create"
-          className={() => 'pill' + (isActive('/create') ? ' active' : '')}
-        >
+      <div className="row" style={{ marginTop: 16 }}>
+        <Link className="btn" to="/create">
           Create Scene
-        </NavLink>
-
-        <NavLink
-          to="/library"
-          className={() => 'pill' + (isActive('/library') ? ' active' : '')}
-        >
-          My Library
-        </NavLink>
+        </Link>
+        <Link className="btn secondary" to="/library">
+          Open Library
+        </Link>
       </div>
-    </div>
-  );
-}
-
-export default function App() {
-  return (
-    <div className="container">
-      <Topbar />
-
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/create" element={<CreateScene />} />
-        <Route path="/library" element={<Library />} />
-        <Route path="/scene/:id" element={<SceneDetail />} />
-      </Routes>
     </div>
   );
 }

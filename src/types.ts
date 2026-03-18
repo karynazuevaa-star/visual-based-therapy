@@ -13,6 +13,8 @@ export type VoiceStyle =
   | 'Soft'
   | 'Harsh';
 
+export type AvatarMode = 'upload' | 'describe' | 'none';
+
 export type Scene = {
   id: string;
   title: string;
@@ -23,7 +25,7 @@ export type Scene = {
   createdAt: number;
   updatedAt: number;
 
-  // optional (используются в SceneDetail)
+  avatarMode?: AvatarMode;
   avatarDescription?: string;
   avatarImageDataUrl?: string;
 

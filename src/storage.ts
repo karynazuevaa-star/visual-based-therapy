@@ -1,21 +1,7 @@
-// src/storage.ts
-
-export type Scene = {
-  id: string;
-  title?: string;
-  createdAt?: number;
-  updatedAt?: number;
-
-  // любые дополнительные поля, которые ты сохраняешь из CreateScene
-  emotion?: string;
-  voice?: string;
-  prompt?: string;
-  notes?: string;
-};
+import type { Scene } from './types';
 
 const STORAGE_KEY = 'vbt_scenes_v1';
 
-/* ===== загрузка всех сцен ===== */
 export function loadScenes(): Scene[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -29,12 +15,10 @@ export function loadScenes(): Scene[] {
   }
 }
 
-/* ===== внутренняя функция сохранения ===== */
 function saveScenes(scenes: Scene[]) {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(scenes));
 }
 
-/* ===== добавить новую сцену или обновить существующую ===== */
 export function upsertScene(scene: Scene): Scene {
   const now = Date.now();
   const scenes = loadScenes();
@@ -58,20 +42,16 @@ export function upsertScene(scene: Scene): Scene {
     updatedAt: now,
   };
 
-  // добавим в начало списка
   saveScenes([created, ...scenes]);
   return created;
 }
 
-/* ===== получить сцену по id (оба варианта имени) ===== */
-export function getSceneById(id: string): Scene | undefined {
+export function getScene(id: string): Scene | undefined {
   return loadScenes().find((s) => s.id === id);
 }
 
-export const getScene = getSceneById; // алиас на случай если где-то импортируется getScene
-
-/* ===== удалить сцену ===== */
-export function deleteScene(id: string) {
+export function deleteScene(id: string): Scene[] {
   const scenes = loadScenes().filter((s) => s.id !== id);
   saveScenes(scenes);
+  return scenes;
 }

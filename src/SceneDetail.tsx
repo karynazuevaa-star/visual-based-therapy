@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import type { Scene } from '../types';
+import type { Scene } from './types';
 import { getScene, upsertScene } from './storage';
 import { speak, stopSpeaking } from './speech';
 
@@ -37,7 +37,9 @@ export default function SceneDetail() {
       <div className="card">
         <h2>Scene not found</h2>
         <p className="muted">This scene might have been deleted or is not available in this browser.</p>
-        <Link className="btn secondary" to="/library">Back to library</Link>
+        <Link className="btn secondary" to="/library">
+          Back to library
+        </Link>
       </div>
     );
   }
@@ -79,8 +81,12 @@ export default function SceneDetail() {
             </div>
           </div>
           <div className="row">
-            <button className="btn secondary" onClick={play}>Play line</button>
-            <button className="btn" onClick={done}>Done</button>
+            <button className="btn secondary" onClick={play}>
+              Play line
+            </button>
+            <button className="btn" onClick={done}>
+              Done
+            </button>
           </div>
         </div>
 
@@ -106,38 +112,39 @@ export default function SceneDetail() {
       <div className="card">
         <h2>Reflection / debrief</h2>
         <p className="muted">
-          Capture the client’s response and plan the next iteration (change intensity, switch role, add supportive voice).
+          Capture the client’s response and plan the next iteration.
         </p>
 
         <div className="field">
           <label>Feelings (emotions)</label>
-          <textarea value={feelings} onChange={(e) => setFeelings(e.target.value)} placeholder="What did the client feel during / after?" />
+          <textarea value={feelings} onChange={(e) => setFeelings(e.target.value)} />
         </div>
 
         <div className="field">
           <label>Thoughts</label>
-          <textarea value={thoughts} onChange={(e) => setThoughts(e.target.value)} placeholder="What did the client think / believe?" />
+          <textarea value={thoughts} onChange={(e) => setThoughts(e.target.value)} />
         </div>
 
         <div className="field">
           <label>Body sensations</label>
-          <textarea value={body} onChange={(e) => setBody(e.target.value)} placeholder="Tension, heartbeat, breathing, etc." />
+          <textarea value={body} onChange={(e) => setBody(e.target.value)} />
         </div>
 
         <div className="field">
           <label>Next step</label>
-          <textarea value={nextStep} onChange={(e) => setNextStep(e.target.value)} placeholder="Adjust intensity, add Wise Adult, homework, etc." />
+          <textarea value={nextStep} onChange={(e) => setNextStep(e.target.value)} />
         </div>
 
         <div className="row" style={{ marginTop: 12 }}>
-          <button className="btn" onClick={saveReflection}>Save reflection</button>
-          <Link className="btn secondary" to="/create">Create another scene</Link>
-          <Link className="btn secondary" to="/library">Back to library</Link>
-        </div>
-
-        <div className="hr" />
-        <div className="muted small">
-          Note: For a real product, add consent UX, safety stops, and institute-level templates.
+          <button className="btn" onClick={saveReflection}>
+            Save reflection
+          </button>
+          <Link className="btn secondary" to="/create">
+            Create another scene
+          </Link>
+          <Link className="btn secondary" to="/library">
+            Back to library
+          </Link>
         </div>
       </div>
     </div>

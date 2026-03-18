@@ -1,6 +1,5 @@
 import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { nanoid } from 'nanoid';
 import { upsertScene } from './storage';
 import { speak, stopSpeaking } from './speech';
 import type { Emotion, Scene, VoiceStyle } from './types';
@@ -37,7 +36,7 @@ export default function CreateScene() {
 
   const scene: Scene = useMemo(
     () => ({
-      id: nanoid(),
+      id: crypto.randomUUID(),
       title: title.trim() || 'Untitled scene',
       line: line.trim(),
       emotion,

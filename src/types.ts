@@ -22,4 +22,15 @@ export type Scene = {
   voice: VoiceStyle;
   createdAt: number;
   updatedAt: number;
+
+  // optional (используются в SceneDetail)
+  avatarDescription?: string;
+  avatarImageDataUrl?: string;
+
+  reflection?: {
+    feelings?: string;
+    thoughts?: string;
+    body?: string;
+    nextStep?: string;
+  };
 };

@@ -2,9 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { upsertScene } from './storage';
 import { speak, stopSpeaking } from './speech';
-import type { Emotion, Scene, VoiceStyle } from './types';
-
-/* ===== constants ===== */
+import type { AvatarMode, Emotion, Scene, VoiceStyle } from './types';
 
 const EMOTIONS: Emotion[] = [
   'Neutral',
@@ -23,8 +21,6 @@ const VOICES: VoiceStyle[] = [
   'Harsh',
 ];
 
-/* ===== component ===== */
-
 export default function CreateScene() {
   const nav = useNavigate();
 
@@ -34,19 +30,40 @@ export default function CreateScene() {
   const [voice, setVoice] = useState<VoiceStyle>('Default');
   const [intensity, setIntensity] = useState(5);
 
-  const scene: Scene = useMemo(
-    () => ({
+  const [avatarMode, setAvatarMode] = useState<AvatarMode>('none');
+  const [avatarDescription, setAvatarDescription] = useState('');
+  const [avatarImageDataUrl, setAvatarImageDataUrl] = useState<string>('');
+
+  function handleImageUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      const result = typeof reader.result === 'string' ? reader.result : '';
+      setAvatarImageDataUrl(result);
+      setAvatarMode('upload');
+    };
+    reader.readAsDataURL(file);
+  }
+
+  const scene: Scene = useMemo(() => {
+    const now = Date.now();
+
+    return {
       id: crypto.randomUUID(),
       title: title.trim() || 'Untitled scene',
       line: line.trim(),
       emotion,
       intensity,
       voice,
-      createdAt: Date.now(),
-      updatedAt: Date.now(),
-    }),
-    [title, line, emotion, intensity, voice]
-  );
+      createdAt: now,
+      updatedAt: now,
+      avatarMode,
+      avatarDescription: avatarDescription.trim() || undefined,
+      avatarImageDataUrl: avatarImageDataUrl || undefined,
+    };
+  }, [title, line, emotion, intensity, voice, avatarMode, avatarDescription, avatarImageDataUrl]);
 
   function save() {
     if (!line.trim()) {
@@ -62,7 +79,6 @@ export default function CreateScene() {
     <div className="card">
       <h2>Create Scene</h2>
 
-      {/* Title */}
       <div className="field">
         <label>Title</label>
         <input
@@ -72,7 +88,6 @@ export default function CreateScene() {
         />
       </div>
 
-      {/* Line */}
       <div className="field">
         <label>Scripted line</label>
         <textarea
@@ -82,7 +97,6 @@ export default function CreateScene() {
         />
       </div>
 
-      {/* Emotion */}
       <div className="field">
         <label>Emotion</label>
         <select
@@ -97,7 +111,6 @@ export default function CreateScene() {
         </select>
       </div>
 
-      {/* Intensity */}
       <div className="field">
         <label>Intensity: {intensity}</label>
         <input
@@ -109,7 +122,6 @@ export default function CreateScene() {
         />
       </div>
 
-      {/* Voice */}
       <div className="field">
         <label>Voice</label>
         <select
@@ -124,8 +136,67 @@ export default function CreateScene() {
         </select>
       </div>
 
-      {/* Actions */}
-      <div style={{ marginTop: 16, display: 'flex', gap: 8 }}>
+      <div className="field">
+        <label>Avatar source</label>
+        <div className="row">
+          <button
+            type="button"
+            className={`btn ${avatarMode === 'upload' ? '' : 'secondary'}`}
+            onClick={() => setAvatarMode('upload')}
+          >
+            Upload image
+          </button>
+          <button
+            type="button"
+            className={`btn ${avatarMode === 'describe' ? '' : 'secondary'}`}
+            onClick={() => setAvatarMode('describe')}
+          >
+            Describe avatar
+          </button>
+          <button
+            type="button"
+            className={`btn ${avatarMode === 'none' ? '' : 'secondary'}`}
+            onClick={() => setAvatarMode('none')}
+          >
+            No avatar
+          </button>
+        </div>
+      </div>
+
+      {avatarMode === 'upload' && (
+        <div className="field">
+          <label>Upload image</label>
+          <input type="file" accept="image/*" onChange={handleImageUpload} />
+          {avatarImageDataUrl && (
+            <div style={{ marginTop: 12 }}>
+              <img
+                src={avatarImageDataUrl}
+                alt="avatar preview"
+                style={{
+                  width: 180,
+                  height: 180,
+                  objectFit: 'cover',
+                  borderRadius: 16,
+                  border: '1px solid #ddd',
+                }}
+              />
+            </div>
+          )}
+        </div>
+      )}
+
+      {avatarMode === 'describe' && (
+        <div className="field">
+          <label>Avatar description</label>
+          <textarea
+            value={avatarDescription}
+            onChange={(e) => setAvatarDescription(e.target.value)}
+            placeholder="Example: calm adult woman, warm eyes, soft cardigan, supportive presence..."
+          />
+        </div>
+      )}
+
+      <div style={{ marginTop: 16, display: 'flex', gap: 8, flexWrap: 'wrap' }}>
         <button
           className="btn secondary"
           onClick={() => speak(line, emotion, intensity, voice)}

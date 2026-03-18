@@ -111,12 +111,8 @@ export default function SceneDetail() {
 
       <div className="card">
         <h2>Reflection / debrief</h2>
-        <p className="muted">
-          Capture the client’s response and plan the next iteration.
-        </p>
-
         <div className="field">
-          <label>Feelings (emotions)</label>
+          <label>Feelings</label>
           <textarea value={feelings} onChange={(e) => setFeelings(e.target.value)} />
         </div>
 

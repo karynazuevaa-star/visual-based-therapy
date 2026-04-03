@@ -5,3 +5,10 @@
 body {
   margin: 0;
 }
+.card:hover {
+  transform: translateY(-6px) scale(1.02);
+}
+
+.card:hover div {
+  opacity: 1 !important;
+}
